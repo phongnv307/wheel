@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vòng quay ngẫu nhiên</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="controls">
+      <textarea
+        id="itemTextarea"
+        placeholder="Nhập các lựa chọn, mỗi lựa chọn trên một dòng"
+      ></textarea>
+      <button id="addButton">Thêm</button>
+    </div>
+    <div class="container">
+      <div id="choicesList" class="choices-list">
+        <h3>Lựa chọn:</h3>
+        <ul></ul>
+      </div>
+      <div class="wheel-container">
+        <canvas id="wheel" width="450" height="450"></canvas>
+        <div class="pointer"></div>
+      </div>
+    </div>
+    <button id="spinButton">Quay</button>
+
+    <script src="script.js"></script>
+  </body>
+</html>
