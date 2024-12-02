@@ -113,12 +113,12 @@ canvas {
 
 .pointer {
   position: absolute;
-  top: -30px; /* Đặt trỏ ở góc trên */
-  left: 50%;
-  transform: translateX(-50%);
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%) rotate(90deg); /* Đặt mũi tên ở 90 độ */
   width: 0;
   height: 0;
   border-left: 20px solid transparent;
   border-right: 20px solid transparent;
-  border-bottom: 30px solid #e74c3c;
+  border-top: 30px solid #e74c3c; /* Đổi màu nếu cần */
 }

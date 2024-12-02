@@ -5,11 +5,23 @@ const itemTextarea = document.getElementById("itemTextarea");
 const addButton = document.getElementById("addButton");
 const choicesList = document.querySelector(".choices-list ul");
 
+const colors = [
+  "#f39c12",
+  "#e67e22",
+  "#1abc9c",
+  "#2ecc71",
+  "#9b59b6",
+  "#3498db",
+  "#f1c40f",
+  "#e74c3c",
+];
+
 let segments = [];
 let isSpinning = false;
 let currentRotation = 0;
 
 // Hàm vẽ vòng quay
+// Hàm vẽ vòng quay với nhiều màu sắc
 function renderWheel() {
   if (segments.length === 0) return;
 
@@ -21,10 +33,13 @@ function renderWheel() {
     const startAngle = i * segmentAngle;
     const endAngle = startAngle + segmentAngle;
 
+    // Chọn màu từ mảng colors (lặp lại khi hết mảng)
+    const color = colors[i % colors.length];
+
     ctx.beginPath();
     ctx.moveTo(radius, radius);
     ctx.arc(radius, radius, radius, startAngle, endAngle);
-    ctx.fillStyle = i % 2 === 0 ? "#f39c12" : "#f1c40f";
+    ctx.fillStyle = color;
     ctx.fill();
     ctx.strokeStyle = "#ecf0f1";
     ctx.stroke();
