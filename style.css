@@ -122,3 +122,28 @@ canvas {
   border-right: 20px solid transparent;
   border-top: 30px solid #e74c3c; /* Đổi màu nếu cần */
 }
+
+#result {
+  margin-top: 20px; /* Khoảng cách phía trên */
+  font-size: 24px; /* Tăng kích thước chữ */
+  font-weight: bold; /* In đậm chữ */
+  color: #16a085; /* Màu chữ nổi bật */
+  text-align: center; /* Căn giữa */
+  padding: 10px; /* Tạo khoảng cách bên trong */
+  border: 2px dashed #16a085; /* Viền kiểu nét đứt */
+  border-radius: 8px; /* Góc bo tròn */
+  background-color: #ecfdfd; /* Màu nền nhạt */
+  max-width: 300px; /* Độ rộng tối đa */
+  margin-left: auto; /* Căn giữa khối ngang */
+  margin-right: auto;
+}
+
+#result {
+  transition: all 0.5s ease-in-out;
+  transform: scale(1);
+}
+
+#result.show {
+  transform: scale(1.2); /* Hiệu ứng phóng to khi cập nhật kết quả */
+  background-color: #d1fae5; /* Màu nền sáng hơn khi cập nhật */
+}

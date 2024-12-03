@@ -20,6 +20,16 @@ let segments = [];
 let isSpinning = false;
 let currentRotation = 0;
 
+function loadLastResult() {
+  const lastResult = localStorage.getItem("lastResult");
+  if (lastResult) {
+    const resultElement = document.getElementById("result");
+    resultElement.textContent = `Làm đi: ${lastResult}`;
+  }
+}
+
+loadLastResult(); // Gọi hàm này khi trang được tải
+
 // Hàm vẽ vòng quay
 // Hàm vẽ vòng quay với nhiều màu sắc
 function renderWheel() {
@@ -148,7 +158,22 @@ spinButton.addEventListener("click", () => {
       const correctedAngle = (360 - finalAngle) % 360; // Điều chỉnh để khớp mũi tên
       const selectedIndex =
         Math.floor(correctedAngle / segmentAngle) % segments.length;
-      alert(`Kết quả: ${segments[selectedIndex]}`);
+
+      // Cập nhật kết quả vào thẻ <p>
+      const resultElement = document.getElementById("result");
+
+      // Hiển thị kết quả với hiệu ứng
+      resultElement.textContent = `Làm đi: ${segments[selectedIndex]}`;
+      resultElement.classList.add("show");
+
+      // Lưu kết quả vào LocalStorage
+      localStorage.setItem("lastResult", segments[selectedIndex]);
+
+      // Xóa lớp `show` sau 0.5 giây để trở về trạng thái bình thường
+      setTimeout(() => {
+        resultElement.classList.remove("show");
+      }, 500);
+
       isSpinning = false;
     }
   }
