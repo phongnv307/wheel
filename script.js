@@ -121,8 +121,49 @@ function deleteChoice(index) {
   saveChoicesToLocalStorage(); // Lưu lại sau khi xóa
 }
 
+function startCountdown() {
+  const countdownElement = document.getElementById("countdown");
+  const lastSpinTime = parseInt(localStorage.getItem("lastSpinTime"), 10);
+  const currentTime = Date.now();
+
+  if (lastSpinTime && currentTime - lastSpinTime < 3600000) {
+    const interval = setInterval(() => {
+      const remainingTime = 3600000 - (Date.now() - lastSpinTime);
+
+      if (remainingTime <= 0) {
+        clearInterval(interval);
+        countdownElement.textContent = ""; // Xóa đồng hồ khi hết thời gian
+        spinButton.disabled = false; // Kích hoạt nút quay
+      } else {
+        const minutes = Math.floor(remainingTime / 60000);
+        const seconds = Math.floor((remainingTime % 60000) / 1000);
+        countdownElement.textContent = `Bạn có thể quay lại sau: ${minutes} phút ${seconds} giây`;
+        spinButton.disabled = true; // Vô hiệu hóa nút quay
+      }
+    }, 1000);
+  } else {
+    countdownElement.textContent = ""; // Không hiện nếu không có thời gian chờ
+    spinButton.disabled = false; // Kích hoạt nút quay
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  startCountdown(); // Khởi động đếm ngược khi tải trang
+});
+
 // Khi nhấn nút quay
 spinButton.addEventListener("click", () => {
+  const lastSpinTime = parseInt(localStorage.getItem("lastSpinTime"), 10);
+  const currentTime = Date.now();
+
+  if (lastSpinTime && currentTime - lastSpinTime < 3600000) {
+    return; // Không cho phép quay nếu chưa đủ 1 giờ
+  }
+
+  // Lưu thời gian quay
+  localStorage.setItem("lastSpinTime", currentTime);
+  startCountdown(); // Khởi động đếm ngược
+
   if (isSpinning || segments.length === 0) {
     alert("Hãy thêm ít nhất một lựa chọn để quay!");
     return;
