@@ -147,6 +147,27 @@ function startCountdown() {
   }
 }
 
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+
+const shuffleButton = document.getElementById("shuffleButton");
+
+shuffleButton.addEventListener("click", () => {
+  if (segments.length === 0) {
+    alert("Danh sách trống, không thể xáo trộn!");
+    return;
+  }
+
+  shuffleArray(segments); // Xáo trộn mảng
+  renderChoices(); // Cập nhật danh sách hiển thị
+  renderWheel(); // Cập nhật vòng quay
+  saveChoicesToLocalStorage(); // Lưu danh sách xáo trộn vào LocalStorage
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   startCountdown(); // Khởi động đếm ngược khi tải trang
 });
