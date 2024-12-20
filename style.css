@@ -51,7 +51,7 @@ button:hover {
 
 /* Danh sách lựa chọn */
 .choices-list {
-  width: 250px;
+  width: 350px;
   border: 1px solid #ddd;
   background-color: white;
   border-radius: 5px;
@@ -65,36 +65,77 @@ button:hover {
 }
 
 .choices-list ul {
-  list-style: none;
+  list-style-type: none;
   padding: 0;
-  margin: 0;
-  margin-bottom: 25px;
 }
 
 .choices-list li {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 5px 0;
-  border-bottom: 1px solid #f0f0f0;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
 }
 
-.choices-list li:last-child {
-  border-bottom: none;
+.choices-list li > span {
+  flex-grow: 1; /* Để văn bản chiếm hết khoảng trống */
+  text-align: left; /* Văn bản sát bên trái */
+  margin-left: 10px; /* Cách một chút sau nút switch */
 }
 
-.choices-list button {
-  padding: 4px 8px;
-  font-size: 14px;
-  background-color: #e74c3c;
-  color: white;
-  border: none;
-  border-radius: 3px;
+.choices-list li.disabled {
+  background-color: #f2f2f2;
+  color: gray;
+  text-decoration: line-through;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
   cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 20px;
 }
 
-.choices-list button:hover {
-  background-color: #c0392b;
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #2ecc71;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
 }
 
 .wheel-container {

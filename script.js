@@ -37,9 +37,15 @@ function renderWheel() {
 
   const size = canvas.width;
   const radius = size / 2;
-  const segmentAngle = (2 * Math.PI) / segments.length;
+  let elements = [];
+  for (const segment of segments) {
+    if (!segment.disabled) elements.push(segment);
+  }
 
-  for (let i = 0; i < segments.length; i++) {
+  if (elements.length === 0) return;
+  const segmentAngle = (2 * Math.PI) / elements.length;
+
+  for (let i = 0; i < elements.length; i++) {
     const startAngle = i * segmentAngle;
     const endAngle = startAngle + segmentAngle;
 
@@ -61,7 +67,7 @@ function renderWheel() {
     ctx.textAlign = "right";
     ctx.fillStyle = "#2c3e50";
     ctx.font = "16px Arial";
-    ctx.fillText(segments[i], radius - 10, 5);
+    ctx.fillText(elements[i].text, radius - 10, 5);
     ctx.restore();
   }
 }
@@ -71,15 +77,48 @@ function renderChoices() {
   choicesList.innerHTML = "";
   segments.forEach((choice, index) => {
     const li = document.createElement("li");
-    li.textContent = choice;
+    if (choice.disabled) {
+      li.classList.add("disabled");
+    }
 
+    // Tạo switch
+    const switchLabel = document.createElement("label");
+    switchLabel.className = "switch";
+
+    const switchInput = document.createElement("input");
+    switchInput.type = "checkbox";
+    switchInput.checked = !choice.disabled;
+    switchInput.addEventListener("change", () => toggleChoice(index));
+
+    const slider = document.createElement("span");
+    slider.className = "slider";
+
+    switchLabel.appendChild(switchInput);
+    switchLabel.appendChild(slider);
+
+    // Nội dung lựa chọn
+    const choiceText = document.createElement("span");
+    choiceText.textContent = choice.text;
+
+    // Nút xóa
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Xóa";
+    deleteButton.className = "delete-button";
     deleteButton.addEventListener("click", () => deleteChoice(index));
 
+    li.appendChild(switchLabel);
+    li.appendChild(choiceText);
     li.appendChild(deleteButton);
+
     choicesList.appendChild(li);
   });
+}
+
+function toggleChoice(index) {
+  segments[index].disabled = !segments[index].disabled;
+  saveChoicesToLocalStorage();
+  renderChoices();
+  renderWheel();
 }
 
 // Hàm lưu danh sách vào LocalStorage
@@ -105,7 +144,10 @@ addButton.addEventListener("click", () => {
     return;
   }
 
-  const newChoices = input.split("\n").filter((choice) => choice.trim() !== "");
+  const newChoices = input
+    .split("\n")
+    .filter((choice) => choice.trim() !== "")
+    .map((choice) => ({ text: choice, disabled: false }));
   segments.push(...newChoices);
   itemTextarea.value = "";
   renderChoices();
@@ -126,7 +168,7 @@ function startCountdown() {
   const lastSpinTime = parseInt(localStorage.getItem("lastSpinTime"), 10);
   const currentTime = Date.now();
 
-  if (lastSpinTime && currentTime - lastSpinTime < 3600000) {
+  if (lastSpinTime && currentTime - lastSpinTime < 360000) {
     const interval = setInterval(() => {
       const remainingTime = 3600000 - (Date.now() - lastSpinTime);
 
@@ -177,7 +219,7 @@ spinButton.addEventListener("click", () => {
   const lastSpinTime = parseInt(localStorage.getItem("lastSpinTime"), 10);
   const currentTime = Date.now();
 
-  if (lastSpinTime && currentTime - lastSpinTime < 3600000) {
+  if (lastSpinTime && currentTime - lastSpinTime < 360000) {
     return; // Không cho phép quay nếu chưa đủ 1 giờ
   }
 
@@ -215,21 +257,25 @@ spinButton.addEventListener("click", () => {
     if (progress < 1) {
       requestAnimationFrame(animateWheel);
     } else {
-      const segmentAngle = 360 / segments.length; // Góc của mỗi phần tử
+      let elements = [];
+      for (const segment of segments) {
+        if (!segment.disabled) elements.push(segment);
+      }
+      const segmentAngle = 360 / elements.length; // Góc của mỗi phần tử
       const finalAngle = currentRotation % 360; // Góc cuối cùng của vòng quay
       const correctedAngle = (360 - finalAngle) % 360; // Điều chỉnh để khớp mũi tên
       const selectedIndex =
-        Math.floor(correctedAngle / segmentAngle) % segments.length;
+        Math.floor(correctedAngle / segmentAngle) % elements.length;
 
       // Cập nhật kết quả vào thẻ <p>
       const resultElement = document.getElementById("result");
 
       // Hiển thị kết quả với hiệu ứng
-      resultElement.textContent = `Làm đi: ${segments[selectedIndex]}`;
+      resultElement.textContent = `Làm đi: ${elements[selectedIndex].text}`;
       resultElement.classList.add("show");
 
       // Lưu kết quả vào LocalStorage
-      localStorage.setItem("lastResult", segments[selectedIndex]);
+      localStorage.setItem("lastResult", elements[selectedIndex].text);
 
       // Xóa lớp `show` sau 0.5 giây để trở về trạng thái bình thường
       setTimeout(() => {
